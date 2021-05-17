@@ -11,7 +11,7 @@ perl sqli.pl <tagerhost> 80
 Target host must not include `http://|https://|www`
 
 ## How this script works
-It works by sending a request with sql malicious script and fetching the page using `LWP::UserAgent' module.<br>
+It works by sending a request with sql malicious script and fetching the page using `LWP::UserAgent` module.<br>
 And then parsing it with perl powerful regex and output the parsed result into the terminal.
 
 ## The Future and the past
