@@ -82,9 +82,10 @@ sub fetchPage{
 sub parsePage{
     # on fetchPage subroutne we can see that some of our request has been concated with '0x031337'
     foreach(@content){
+        $_ =~ s/^\<\!\-+(.*)\-+\>//; # remove html comments that might interfere with our data
         if($_ =~ /0x031337(.+)0x031337/){ # this is pretty much self explanatory
             return $1;
-        }elsif($_ =~ m/sql/ig){
+        }elsif($_ =~ m/sql/i){
             return "Positive SQLi Vulnerability";
         }
     }
